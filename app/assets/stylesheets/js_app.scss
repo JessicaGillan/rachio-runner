@@ -3,3 +3,38 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 @import "bootstrap-sprockets";
 @import "bootstrap";
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+
+$brand-primary: #00A7E1;
+$brand-dark-blue: #00283A;
+$navy-blue: #002B3C;
+
+// Navbar font
+.navbar, .navbar-default{
+  border-radius: 0;
+  background-color: #fff;
+
+  .navbar-text {
+    color: $navy-blue;
+  }
+
+  li >  a {
+      font-size: 13px;
+  }
+
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 16px;
+  font-family: "Roboto", "Open Sans", Arial, sans-serif;
+}
+
+// Devise flashes
+.devise-alert {
+  border-radius: 4px;
+  line-height: 200%;
+  padding-left: 15px;
+  
+  // Bootstrap yellow alert color scheme
+  background-color: #fcf8e3;
+  color: #8a6d3b;
+}
