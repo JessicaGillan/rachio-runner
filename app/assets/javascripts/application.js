@@ -13,4 +13,7 @@
 //= require jquery
 //= require bootstrap-sprockets
 //= require jquery_ujs
+//= require services/rachio
+//= require services/personService
+//= require controllers/main_ctrl
 //= require_tree .
