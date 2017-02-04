@@ -36,6 +36,9 @@ gem 'jbuilder', '~> 2.5'
 # Bootrap for styling
 gem 'bootstrap-sass', '~> 3.3.6'
 
+# Easy Authentication
+gem 'devise'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
