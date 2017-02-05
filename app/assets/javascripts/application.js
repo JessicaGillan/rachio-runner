@@ -15,5 +15,6 @@
 //= require jquery_ujs
 //= require services/rachio
 //= require services/personService
+//= require views/chooseDeviceView
 //= require controllers/main_ctrl
 //= require_tree .

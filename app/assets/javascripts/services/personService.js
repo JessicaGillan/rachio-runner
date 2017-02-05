@@ -10,9 +10,12 @@ RR.personService = (function(rachio){
     });
   };
 
-
+  var getDevices = function getDevices() {
+    return _person.devices
+  }
 
   return {
-    init: init
+    init: init,
+    getDevices: getDevices
   }
 })(RR.rachio);
