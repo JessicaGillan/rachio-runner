@@ -24,21 +24,14 @@ RR.chooseDeviceView = (function(){
   // PRIVATE
 
   var _deviceCard = function _deviceCard(device) {
-    var card = document.createElement('DIV');
-    var inner = document.createElement('DIV');
-    var link = document.createElement('A');
+    var card = document.createElement('A');
 
-    card.classList.add("panel", "panel-default", "card", "device");
+    card.classList.add("btn", "btn-card", "center-block");
     card.setAttribute("data-type", "device");
     card.setAttribute("data-id", device.id);
+    card.textContent = device.name;
 
-    inner.classList.add("panel-body");
-    inner.textContent = device.name;
-
-    card.appendChild(inner);
-    link.appendChild(card);
-
-    return link
+    return card
   }
 
   return {

@@ -36,6 +36,7 @@ RR.rachio = (function($){
     return BASE_URL + urlEnd
   }
 
+  // TODO: Add $.ajax request for fallback
   var _sendRequest = function _sendRequest(urlEnd, options) {
     options = options || {};
     var init = {};

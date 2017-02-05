@@ -21,6 +21,23 @@ h2 {
   font-family: "Roboto", "Open Sans", Arial, sans-serif;
 }
 
+.btn-card {
+  background-color: $brand-primary;
+  text-align: center;
+  font-size: 20px;
+  font-family: 'Helvetica Neue Roman', Arial, sans-serif !important;
+  color: white;
+  font-weight: bold;
+  width: 300px;
+  padding: 20px 0;
+  margin: auto;
+}
+
+.btn-card:hover {
+  color: white;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
 // Navbar font
 .navbar, .navbar-default{
   border-radius: 0;
