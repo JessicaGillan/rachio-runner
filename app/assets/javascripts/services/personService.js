@@ -5,9 +5,11 @@ RR.personService = (function(rachio){
 
   var init = function init(auth_token) {
     rachio.init(auth_token);
-    rachio.getPerson().then(function(person) {
-      _person = person;
-    });
+
+    return rachio.getPerson()
+            .then(function(person) {
+              _person = person;
+            });
   };
 
   var getDevices = function getDevices() {

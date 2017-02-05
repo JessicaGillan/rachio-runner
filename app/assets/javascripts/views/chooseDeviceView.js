@@ -1,16 +1,23 @@
 var RR = RR || {};
 
 RR.chooseDeviceView = (function(){
-  var _wrapper = document.getElementById('js-app');
-  var _header = document.createElement('H2').innerHTML = "Which Device would you like to run?"
 
   var render = function render(devices) {
+    var _wrapper = document.getElementById('js-app');
+
     _wrapper.innerHTML = ""; // Reset View
+
+    // Add Header
+    var _header = document.createElement('H2')
+    _header.textContent = "Which device would you like to run?";
     _wrapper.appendChild(_header);
 
-    var i = devices.length;
-    while(i--) {
-      _wrapper.appendChild(_deviceCard(devices[i]));
+    // Add Device Cards
+    if(devices) {
+      var i = devices.length;
+      while(i--) {
+        _wrapper.appendChild(_deviceCard(devices[i]));
+      }
     }
   }
 
@@ -18,11 +25,16 @@ RR.chooseDeviceView = (function(){
 
   var _deviceCard = function _deviceCard(device) {
     var card = document.createElement('DIV');
-    card.classList.add("panel", "card", "device");
-    card.addAttribute("data-type", "device");
-    card.addAttribute("data-id", device.id);
-    card.textContent = device.name;
+    var inner = document.createElement('DIV');
 
+    card.classList.add("panel", "panel-default", "card", "device");
+    card.setAttribute("data-type", "device");
+    card.setAttribute("data-id", device.id);
+
+    inner.classList.add("panel-body");
+    inner.textContent = device.name;
+
+    card.appendChild(inner);
     return card
   }
 
