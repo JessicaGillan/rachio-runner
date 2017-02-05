@@ -26,6 +26,7 @@ RR.chooseDeviceView = (function(){
   var _deviceCard = function _deviceCard(device) {
     var card = document.createElement('DIV');
     var inner = document.createElement('DIV');
+    var link = document.createElement('A');
 
     card.classList.add("panel", "panel-default", "card", "device");
     card.setAttribute("data-type", "device");
@@ -35,7 +36,9 @@ RR.chooseDeviceView = (function(){
     inner.textContent = device.name;
 
     card.appendChild(inner);
-    return card
+    link.appendChild(card);
+
+    return link
   }
 
   return {
