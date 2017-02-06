@@ -1,8 +1,13 @@
 var RR = RR || {};
 
 RR.chooseDeviceView = (function(){
+  var _clickAction;
 
-  var render = function render(devices, clickAction) {
+  var init = function init(clickAction) {
+    _clickAction = clickAction;
+  }
+
+  var render = function render(devices) {
     var _wrapper = document.getElementById('js-app');
 
     _wrapper.innerHTML = ""; // Reset View
@@ -16,14 +21,14 @@ RR.chooseDeviceView = (function(){
     if(devices) {
       var i = devices.length;
       while(i--) {
-        _wrapper.appendChild(_deviceCard(devices[i], clickAction));
+        _wrapper.appendChild(_deviceCard(devices[i]));
       }
     }
   }
 
   // PRIVATE
 
-  var _deviceCard = function _deviceCard(device, clickAction) {
+  var _deviceCard = function _deviceCard(device) {
     var card = document.createElement('A');
 
     card.classList.add("btn", "btn-card", "center-block");
@@ -31,12 +36,13 @@ RR.chooseDeviceView = (function(){
     card.setAttribute("data-id", device.id);
     card.textContent = device.name;
 
-    card.addEventListener("click", clickAction);
+    card.addEventListener("click", _clickAction);
 
     return card
   }
 
   return {
+    init: init,
     render: render
   }
 })();

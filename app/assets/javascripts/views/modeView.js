@@ -1,6 +1,11 @@
 var RR = RR || {};
 
 RR.modeView = (function(){
+  var _clickAction;
+
+  var init = function init(clickAction) {
+    _clickAction = clickAction;
+  }
 
   var render = function render() {
     var _wrapper = document.getElementById('js-app');
@@ -27,10 +32,13 @@ RR.modeView = (function(){
     card.setAttribute("data-value", message);
     card.textContent = message;
 
+    card.addEventListener("click", _clickAction);
+
     return card
   }
 
   return {
+    init: init,
     render: render
   }
 })();

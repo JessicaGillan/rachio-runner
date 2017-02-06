@@ -1,21 +1,24 @@
 var RR = RR || {};
 
-RR.mainCtrl = (function(personService, deviceView, modeView){
+RR.mainCtrl = (function(personService, deviceView, modeView, zoneView){
   var STATES = {
     'modeSelect': modeView.render,
-    'zoneSelect': null
+    'zoneSelect': function() { zoneView.render(personService.getZones()) }
   }
 
   var init = function init(auth_token, cookies) {
+    deviceView.init(goToModeState);
+    modeView.init(goToZoneState);
+
     personService.init(auth_token)
       .then( function() {
         // Store state in cookies cookies in case of refresh
-        var state = _getCookie('state');
+        var state = RR.getCookie('state');
 
         if(state && STATES[state]) {
           STATES[state]();
         } else {
-          deviceView.render(personService.getDevices(), goToModeState);
+          deviceView.render(personService.getDevices());
         }
       });
   };
@@ -23,39 +26,29 @@ RR.mainCtrl = (function(personService, deviceView, modeView){
   var goToModeState = function goToModeState(e) {
     e.preventDefault();
 
+    // set device id
+    RR.setCookie('device_id', e.target.getAttribute('data-id'), 1);
+
     // set modeSelect state in cookie
-    _setCookie('state', 'modeSelect', 1);
+    RR.setCookie('state', 'modeSelect', 1);
 
     // init and render mode view
     STATES['modeSelect']();
   };
 
-  // PRIVATE
+  var goToZoneState = function goToZoneState(e) {
+    e.preventDefault();
 
-  var _setCookie = function _setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+ d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-  }
+    // init zone ctrler
 
-  var _getCookie = function _getCookie(cname) {
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
-    for(var i = 0; i <ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
+    // set modeSelect state in cookie
+    RR.setCookie('state', 'zoneSelect', 1);
+
+    // init and render mode view
+    STATES['zoneSelect']();
   }
 
   return {
     init: init
   }
-})(RR.personService, RR.chooseDeviceView, RR.modeView);
+})(RR.personService, RR.chooseDeviceView, RR.modeView, RR.setZonesView);
