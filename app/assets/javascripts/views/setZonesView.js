@@ -1,6 +1,10 @@
 
 RR.setZonesView = (function(){
-  var _controls;
+  var _controls, _clickAction;
+
+  var init = function(clickAction) {
+    _clickAction = clickAction;
+  }
 
   var render = function render(zones) {
     var _wrapper = document.getElementById('js-app');
@@ -15,10 +19,7 @@ RR.setZonesView = (function(){
     _wrapper.appendChild(_header);
 
     // Add DONE button
-    var _done = document.createElement('A');
-    _done.textContent = 'Submit ✓';
-    _done.classList.add("btn", "btn-success", "btn-submit", "center-block");
-    _wrapper.appendChild(_done);
+    _wrapper.appendChild(_doneButton());
 
     // Add Zone Cards
     if(zones) {
@@ -30,6 +31,18 @@ RR.setZonesView = (function(){
   }
 
   // PRIVATE
+
+  var _doneButton = function _doneButton() {
+    var done = document.createElement('A');
+    done.textContent = 'Submit ✓';
+    done.classList.add("btn", "btn-success", "btn-submit", "center-block");
+
+    done.addEventListener("click", function(e) {
+      _clickAction(e, _getZoneSettings());
+    })
+
+    return done
+  }
 
   var _zoneRow = function _zoneRow(zone) {
     var row = document.createElement('DIV');
@@ -56,24 +69,29 @@ RR.setZonesView = (function(){
     card.textContent = zone.name || "Zone " + zone.zoneNumber;
 
     card.addEventListener("click", function(e){
-      if(e.target.getAttribute('data-state') === "selected") {
-        e.target.setAttribute("data-state", "unselected");
-        e.target.classList.remove("selected");
+      _toggleSelect(e.target);
 
-        e.target.parentNode.getElementsByTagName("INPUT")[0].disabled = true;
-        // e.target.parentNode.getElementsByTagName("SELECT")[0].disabled = true;
-      } else {
-        e.target.setAttribute("data-state", "selected");
-        e.target.classList.add("selected");
-
-        e.target.parentNode.getElementsByTagName("INPUT")[0].disabled = false;
-        // e.target.parentNode.getElementsByTagName("SELECT")[0].disabled = false;
-      }
     })
 
     if(zone.imageUrl) card.style.backgroundImage = "url(" + zone.imageUrl + ")";
 
     return card
+  }
+
+  var _toggleSelect = function(element) {
+    if(element.getAttribute('data-state') === "selected") {
+      element.setAttribute("data-state", "unselected");
+      element.classList.remove("selected");
+
+      element.parentNode.getElementsByTagName("INPUT")[0].disabled = true;
+      // element.parentNode.getElementsByTagName("SELECT")[0].disabled = true;
+    } else {
+      element.setAttribute("data-state", "selected");
+      element.classList.add("selected");
+
+      element.parentNode.getElementsByTagName("INPUT")[0].disabled = false;
+      // element.parentNode.getElementsByTagName("SELECT")[0].disabled = false;
+    }
   }
 
   var _setUpControls = function _setUpControls() {
@@ -114,7 +132,24 @@ RR.setZonesView = (function(){
     return hours
   }
 
+  var _getZoneSettings = function(){
+    var selected = document.getElementsByClassName('selected');
+
+    var zoneInfo = {};
+    var zones = [];
+    for (var i = 0; i < selected.length; i++) {
+      zoneInfo = {};
+      zoneInfo.id = selected[i].getAttribute('data-id');
+      zoneInfo.duration = selected[i].parentNode.getElementsByTagName("INPUT")[0].value;
+
+      zones.push(zoneInfo);
+    }
+
+    return zones
+  }
+
   return {
+    init: init,
     render: render
   }
 })();

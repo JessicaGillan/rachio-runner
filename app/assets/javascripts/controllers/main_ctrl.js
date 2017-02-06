@@ -9,6 +9,7 @@ RR.mainCtrl = (function(personService, deviceView, modeView, zoneView){
   var init = function init(auth_token, cookies) {
     deviceView.init(goToModeState);
     modeView.init(goToZoneState);
+    zoneView.init(startZones);
 
     personService.init(auth_token)
       .then( function() {
@@ -39,13 +40,22 @@ RR.mainCtrl = (function(personService, deviceView, modeView, zoneView){
   var goToZoneState = function goToZoneState(e) {
     e.preventDefault();
 
-    // init zone ctrler
-
     // set modeSelect state in cookie
     RR.setCookie('state', 'zoneSelect', 1);
 
     // init and render mode view
     STATES['zoneSelect']();
+  }
+
+  // Send Zone IDs and Durations to personService
+  var startZones = function startZones(e, options){
+    e.preventDefault();
+
+    console.log("startingzones", options)
+
+    // pass params to person service for request
+    // alert confirmation
+    // clear cookies and go to homepage
   }
 
   return {
