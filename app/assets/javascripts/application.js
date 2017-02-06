@@ -16,5 +16,6 @@
 //= require services/rachio
 //= require services/personService
 //= require views/chooseDeviceView
+//= require views/modeView
 //= require controllers/main_ctrl
 //= require_tree .

@@ -24,13 +24,14 @@ h2 {
 .btn-card {
   background-color: $brand-primary;
   text-align: center;
+  letter-spacing: 1px;
   font-size: 20px;
   font-family: 'Helvetica Neue Roman', Arial, sans-serif !important;
   color: white;
   font-weight: bold;
   width: 300px;
   padding: 20px 0;
-  margin: auto;
+  margin: 15px auto;
 }
 
 .btn-card:hover {

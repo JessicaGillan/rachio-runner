@@ -3,5 +3,6 @@ var RR = RR || {};
 $(document).ready(function() {
   if( $("#js_app-index").length ){
     RR.mainCtrl.init('<%= Rails.application.secrets.rachio_auth_token %>');
+    // pass in device cookie
   }
 });
