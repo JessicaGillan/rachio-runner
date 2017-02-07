@@ -24,6 +24,10 @@ RR.personService = (function(rachio){
     return _sort(_person.devices[0].zones, true)
   }
 
+  var setZones = function setZones(params) {
+    return rachio.startMultiple(params)
+  }
+
   // PRIVATE
 
   var _zonesForDevice = function _zonesForDevice(id) {
@@ -50,6 +54,7 @@ RR.personService = (function(rachio){
   return {
     init: init,
     getDevices: getDevices,
-    getZones: getCurrentDeviceZones
+    getZones: getCurrentDeviceZones,
+    setZones: setZones
   }
 })(RR.rachio);

@@ -140,7 +140,8 @@ RR.setZonesView = (function(){
     for (var i = 0; i < selected.length; i++) {
       zoneInfo = {};
       zoneInfo.id = selected[i].getAttribute('data-id');
-      zoneInfo.duration = selected[i].parentNode.getElementsByTagName("INPUT")[0].value;
+      zoneInfo.duration = selected[i].parentNode.getElementsByTagName("INPUT")[0].value * 60; // Set duration in seconds
+      zoneInfo.sortOrder = i + 1;
 
       zones.push(zoneInfo);
     }

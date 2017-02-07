@@ -9,18 +9,11 @@ RR.mainCtrl = (function(personService, deviceView, modeView, zoneView){
   var init = function init(auth_token, cookies) {
     deviceView.init(goToModeState);
     modeView.init(goToZoneState);
-    zoneView.init(startZones);
+    zoneView.init(setZones);
 
     personService.init(auth_token)
       .then( function() {
-        // Store state in cookies cookies in case of refresh
-        var state = RR.getCookie('state');
-
-        if(state && STATES[state]) {
-          STATES[state]();
-        } else {
-          deviceView.render(personService.getDevices());
-        }
+        _renderState();
       });
   };
 
@@ -48,14 +41,27 @@ RR.mainCtrl = (function(personService, deviceView, modeView, zoneView){
   }
 
   // Send Zone IDs and Durations to personService
-  var startZones = function startZones(e, options){
+  var setZones = function setZones(e, options){
     e.preventDefault();
 
-    console.log("startingzones", options)
+    personService.setZones(options)
+     .then(function(response) {
+        RR.clearCookies(['state', 'device_id']);
+        _renderState();
+     })
+  }
 
-    // pass params to person service for request
-    // alert confirmation
-    // clear cookies and go to homepage
+  // PRIVATE
+
+  var _renderState = function _renderState() {
+    // Store state in cookies cookies in case of refresh
+    var state = RR.getCookie('state');
+
+    if(state && STATES[state]) {
+      STATES[state]();
+    } else {
+      deviceView.render(personService.getDevices());
+    }
   }
 
   return {

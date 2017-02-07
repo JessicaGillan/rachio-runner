@@ -29,3 +29,9 @@ RR.getCookie = function _getCookie(cname) {
   }
   return "";
 }
+
+RR.clearCookies = function clearCookies(cookies) {
+  for (var i = 0; i < cookies.length; i++) {
+    RR.setCookie(cookies[i], '', 0);
+  }
+}
