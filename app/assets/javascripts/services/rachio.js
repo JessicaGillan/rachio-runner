@@ -4,13 +4,26 @@ RR.rachio = (function($){
   var BASE_URL = 'https://api.rach.io/1/public',
       CONTENT_TYPE = 'application/json';
 
-  var _headers = new Headers(),
-      _person_id, _auth_token;
+  var REQUEST = {
+    'fetch': _fetchRequest,
+    'ajax': _ajaxRequest
+  }
+
+  var _fetchHeaders, _ajaxHeaders = {},
+      _person_id, _reqType;
 
   var init = function init(auth_token) {
+    // Use 'fetch()' if available
+    if(!!fetch){
+      _reqType = 'fetch'
+      _fetchHeaders = new Headers();
+      _fetchHeaders.append("Authorization", "Bearer " + auth_token);
+      _fetchHeaders.append("Content-Type", CONTENT_TYPE);
+    } else {
+      _reqType = 'ajax';
+    }
 
-    _headers.append("Authorization", "Bearer " + auth_token);
-    _headers.append("Content-Type", CONTENT_TYPE);
+    _setUpAjax(auth_token);
   };
 
   var getPerson = function getPerson() {
@@ -48,54 +61,62 @@ RR.rachio = (function($){
     return BASE_URL + urlEnd
   }
 
-  // TODO: Add $.ajax request for fallback
-  var _sendRequest = function _sendRequest(urlEnd, options) {
+  var _setUpAjax = function _setUpAjax(token) {
+    _ajaxHeaders.Authorization = 'Bearer ' + token;
+  }
+
+  var _fetchRequest = function _fetchRequest(urlEnd, options) {
     options = options || {};
     var init = {};
 
-    init.headers = _headers;
+    init.headers = _fetchHeaders;
     init.mode = 'cors';
     init.method = options.method || 'GET';
 
     if(options.data) {
-      // var data = new FormData();
-      // data.append( "json", "'" + JSON.stringify(options.data) + "'");
-      // // console.log("form data", data);
-      // console.log("data", options.data);
-      // console.log("datastring",  "'" + JSON.stringify(options.data) + "'");
-      // init.body = data;
-
-      return $.ajax({
-       url: _buildUrl(urlEnd),
-       type: 'PUT',
-       data: JSON.stringify(options.data),
-       dataType: 'json',
-       // contentType: 'application/json; charset=utf-8',
-       headers: {
-         Authorization: "Bearer " + _auth_token
-       },
-       success: function (data) {
-         console.log('finally worked');
-         return data;
-       },
-       error: function(data) {
-         console.error("Error", data)
-         return data
-       }
-      })
-
+      return _ajaxRequest(urlEnd, options)
     } else {
       return fetch(_buildUrl(urlEnd), init)
-      .then(function(response) {
-        if(response.ok) {
-          return response.json()
-        } else {
-          console.error("Error! ", response)
-          return response.json()
-        }
-      })
+              .then(function(response) {
+                if(response.ok) {
+                  return response.json()
+                } else {
+                  console.error("Error! ", response)
+                  return response.json()
+                }
+              })
+    }
+  }
+
+  var _ajaxRequest = function _ajaxRequest(urlEnd, options) {
+    options = options || {};
+
+    var init = {};
+    init.url = _buildUrl(urlEnd);
+    init.method = options.method || 'GET';
+    init.headers = _ajaxHeaders;
+    init.contentType = CONTENT_TYPE;
+
+    if(options.data) {
+      init.data = JSON.stringify(options.data),
+      init.dataType = 'json'
     }
 
+    init.success = function (data) { return data; };
+    init.error = function (data) {
+      console.error("Error" + data);
+      return data;
+    };
+
+    return $.ajax(init)
+  }
+
+  var _sendRequest = function(urlEnd, options) {
+    if(_reqType === 'fetch'){
+      return _fetchRequest(urlEnd, options)
+    } else {
+      return _ajaxRequest(urlEnd, options)
+    }
   }
 
   return {
