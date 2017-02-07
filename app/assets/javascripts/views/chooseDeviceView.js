@@ -34,7 +34,7 @@ RR.chooseDeviceView = (function(){
     card.classList.add("btn", "btn-card", "center-block");
     card.setAttribute("data-type", "device");
     card.setAttribute("data-id", device.id);
-    card.textContent = device.name;
+    card.textContent = "Set Zones on " + device.name;
 
     card.addEventListener("click", _clickAction);
 
