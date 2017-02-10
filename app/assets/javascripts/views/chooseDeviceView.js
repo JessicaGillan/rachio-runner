@@ -22,6 +22,7 @@ RR.chooseDeviceView = (function(){
       var i = devices.length;
       while(i--) {
         _wrapper.appendChild(_deviceCard(devices[i]));
+        _wrapper.appendChild(_enabledZones(devices[i].zones));
       }
     }
   }
@@ -34,11 +35,47 @@ RR.chooseDeviceView = (function(){
     card.classList.add("btn", "btn-card", "center-block");
     card.setAttribute("data-type", "device");
     card.setAttribute("data-id", device.id);
-    card.textContent = "Set Zones on " + device.name;
+
+    card = _adjustForStatus(device, card);
 
     card.addEventListener("click", _clickAction);
 
     return card
+  }
+
+  var _adjustForStatus = function _adjustForStatus(device, card) {
+    if (device.status === "ONLINE") {
+      card.textContent = "Set Zones on " + device.name;
+    } else {
+      card.textContent = device.name + " is offline";
+      card.attr('disabled', true);
+    }
+
+    return card
+  }
+
+  var _enabledZones = function _enabledZones(zones) {
+    var zoneWrapper = document.createElement('DIV');
+    zoneWrapper.classList.add("light-text", "center-block", "text-center");
+    zoneWrapper.textContent = "Currently enabled: ";
+
+    var tag = document.createElement('SPAN');
+    tag.classList.add("zone-tag");
+
+    var tag_copy;
+    for (var i = 0; i < zones.length; i++) {
+      if (zones[i].enabled) {
+        tag_copy = tag.cloneNode();
+        tag_copy.textContent = zones[i].name;
+        zoneWrapper.appendChild(tag_copy);
+      }
+    }
+
+    if(!tag_copy) {
+      zoneWrapper.textContent = "No zones currently enabled."
+    }
+
+    return zoneWrapper
   }
 
   return {

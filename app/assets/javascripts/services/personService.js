@@ -8,7 +8,7 @@ RR.personService = (function(rachio){
 
     return rachio.getPerson()
             .then(function(person) {
-              _person = person;
+              return _person = person;
             });
   };
 
