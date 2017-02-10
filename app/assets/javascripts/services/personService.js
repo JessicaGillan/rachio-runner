@@ -26,6 +26,13 @@ RR.personService = (function(rachio){
 
   var setZones = function setZones(params) {
     return rachio.startMultiple(params)
+            .then( function(response) {
+              if (response && response.error) {
+                return "Sorry, we couldn't get that request to go through."
+              } else {
+                return "Zones successfully set!"
+              }
+            })
   }
 
   // PRIVATE

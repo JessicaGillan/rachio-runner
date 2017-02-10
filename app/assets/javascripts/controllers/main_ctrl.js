@@ -33,10 +33,11 @@ RR.mainCtrl = (function(personService, deviceView, zoneView){
     e.preventDefault();
 
     personService.setZones(options)
-     .then(function(response) {
-
+     .then(function(message) {
+       zoneView.renderConfirmation(message)
         RR.clearCookies(['state', 'device_id']);
         _renderState();
+
      })
   }
 

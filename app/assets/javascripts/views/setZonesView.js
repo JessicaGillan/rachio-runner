@@ -8,7 +8,7 @@ RR.setZonesView = (function(){
 
   var render = function render(zones) {
     RR.fadeFlashes();
-    
+
     var _wrapper = document.getElementById('js-app');
 
     _wrapper.innerHTML = ""; // Reset View
@@ -35,6 +35,13 @@ RR.setZonesView = (function(){
 
       _wrapper.appendChild(_zWrapper)
     }
+  }
+
+  var renderConfirmation = function renderConfirmation(message) {
+    var $modal = $('#confirmationModal');
+
+    $modal.modal('show');
+    $modal.find('.modal-title').text(message);
   }
 
   // PRIVATE
@@ -114,6 +121,8 @@ RR.setZonesView = (function(){
 
     var delay = formGroup.cloneNode(true);
     delay.innerHTML = " minutes "  // minutes in
+
+    // TODO Add delay setting with setTimeout
     // delay.appendChild(_createDelaySelect(0,12));
     // delay.innerHTML += " hours"
 
@@ -158,6 +167,7 @@ RR.setZonesView = (function(){
 
   return {
     init: init,
-    render: render
+    render: render,
+    renderConfirmation: renderConfirmation
   }
 })();
