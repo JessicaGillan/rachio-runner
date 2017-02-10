@@ -92,6 +92,13 @@ h2 {
 }
 
 // Zone Controls
+.zone-wrapper {
+  max-height: 70vh;
+  overflow-y: scroll;
+  border: 1px solid silver;
+  border-radius: 4px;
+}
+
 .zone {
   max-width: 600px;
 }

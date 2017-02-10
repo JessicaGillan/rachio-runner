@@ -23,10 +23,15 @@ RR.setZonesView = (function(){
 
     // Add Zone Cards
     if(zones) {
+      var _zWrapper = document.createElement('DIV');
+      _zWrapper.classList.add("zone-wrapper");
+
       var i = zones.length;
       while(i--) {
-        _wrapper.appendChild(_zoneRow(zones[i]));
+        _zWrapper.appendChild(_zoneRow(zones[i]));
       }
+
+      _wrapper.appendChild(_zWrapper)
     }
   }
 
