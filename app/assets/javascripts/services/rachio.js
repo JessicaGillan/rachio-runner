@@ -14,7 +14,7 @@ RR.rachio = (function($){
 
   var init = function init(auth_token) {
     // Use 'fetch()' if available
-    if(!!fetch){
+    if(!!self.fetch){
       _reqType = 'fetch'
       _fetchHeaders = new Headers();
       _fetchHeaders.append("Authorization", "Bearer " + auth_token);

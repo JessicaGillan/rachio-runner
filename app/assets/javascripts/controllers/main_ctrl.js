@@ -46,6 +46,7 @@ RR.mainCtrl = (function(personService, deviceView, modeView, zoneView){
 
     personService.setZones(options)
      .then(function(response) {
+        
         RR.clearCookies(['state', 'device_id']);
         _renderState();
      })
