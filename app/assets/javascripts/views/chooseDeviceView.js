@@ -8,6 +8,8 @@ RR.chooseDeviceView = (function(){
   }
 
   var render = function render(devices) {
+    RR.fadeFlashes();
+
     var _wrapper = document.getElementById('js-app');
 
     _wrapper.innerHTML = ""; // Reset View

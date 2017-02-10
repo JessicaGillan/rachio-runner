@@ -7,6 +7,8 @@ RR.setZonesView = (function(){
   }
 
   var render = function render(zones) {
+    RR.fadeFlashes();
+    
     var _wrapper = document.getElementById('js-app');
 
     _wrapper.innerHTML = ""; // Reset View
