@@ -38,9 +38,23 @@ RR.personService = (function(rachio){
   // PRIVATE
 
   var _zonesForDevice = function _zonesForDevice(id) {
-    for (var i = 0; i < _person.devices.length; i++) {
-      if(_person.devices[i].id === id) return _sort(_person.devices[i].zones, true);
+
+    // Find Correct device
+    for (var d = 0; d < _person.devices.length; d++) {
+      if (_person.devices[d].id === id) {
+
+        // Get enabled zones
+        var enabled = [];
+        for (var z = 0; z < _person.devices[d].zones.length; z++) {
+          if (_person.devices[d].zones[z].enabled) {
+            enabled.push(_person.devices[d].zones[z])
+          }
+        }
+
+        return _sort(enabled, true)
+      }
     }
+
     return []
   }
 
