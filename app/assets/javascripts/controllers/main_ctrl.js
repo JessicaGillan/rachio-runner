@@ -7,7 +7,7 @@ RR.mainCtrl = (function(personService, deviceView, zoneView){
 
   var init = function init(auth_token, cookies) {
     deviceView.init(goToZoneState);
-    zoneView.init(setZones);
+    zoneView.init(setZones, cancel);
 
     personService.init(auth_token)
       .then( function() {
@@ -39,6 +39,14 @@ RR.mainCtrl = (function(personService, deviceView, zoneView){
         _renderState();
 
      })
+  }
+
+  // Cancel zone setting
+  var cancel = function cancel(e, zone_info){
+    e.preventDefault();
+
+    RR.clearCookies(['state', 'device_id']);
+    _renderState();
   }
 
   // PRIVATE

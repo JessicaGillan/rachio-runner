@@ -1,10 +1,13 @@
 
 RR.setZonesView = (function(){
-  var _controls, _clickAction, _gal_counter;
+  var _controls, _gal_counter,
+      _doneAction, _cancelAction;
+
   var CONVERSION = 0.000072; // 1 cu in/hr == 0.000072 gal/min
 
-  var init = function(clickAction) {
-    _clickAction = clickAction;
+  var init = function(doneAction, cancelAction) {
+    _doneAction = doneAction;
+    _cancelAction = cancelAction;
   }
 
   var render = function render(zones) {
@@ -21,12 +24,10 @@ RR.setZonesView = (function(){
     _header.textContent = "Select when you'd like to water and for how long...";
     _wrapper.appendChild(_header);
 
-    // Add DONE button
-    _wrapper.appendChild(_doneButton());
-
     // Add Gallon Counter
     _gal_counter = document.createElement('H3');
     _gal_counter.setAttribute("id", "gal-counter");
+    _gal_counter.classList.add("light-text");
     _wrapper.appendChild(_gal_counter);
 
     // Add Zone Cards
@@ -45,6 +46,12 @@ RR.setZonesView = (function(){
 
       _wrapper.appendChild(_zWrapper)
     }
+
+    // Add DONE button
+    _wrapper.appendChild(_doneButton());
+
+    // Add cancel button
+    _wrapper.appendChild(_cancelButton());
   }
 
   var renderConfirmation = function renderConfirmation(message) {
@@ -63,13 +70,25 @@ RR.setZonesView = (function(){
   var _doneButton = function _doneButton() {
     var done = document.createElement('A');
     done.textContent = 'Submit ✓';
-    done.classList.add("btn", "btn-success", "btn-submit", "center-block");
+    done.classList.add("btn", "btn-success", "btn-submit", "pull-right");
 
     done.addEventListener("click", function(e) {
-      _clickAction(e, _getZoneSettings());
+      _doneAction(e, _getZoneSettings());
     })
 
     return done
+  }
+
+  var _cancelButton = function _cancelButton() {
+    var cancel = document.createElement('A');
+    cancel.textContent = '< Cancel';
+    cancel.classList.add("pull-left", "margin-top", "pointable");
+
+    cancel.addEventListener("click", function(e) {
+      _cancelAction(e, _getZoneSettings());
+    })
+
+    return cancel
   }
 
   var _zoneRow = function _zoneRow(zone) {
