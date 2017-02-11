@@ -29,10 +29,10 @@ RR.mainCtrl = (function(personService, deviceView, zoneView){
   }
 
   // Send Zone IDs and Durations to personService
-  var setZones = function setZones(e, options){
+  var setZones = function setZones(e, zone_info){
     e.preventDefault();
 
-    personService.setZones(options)
+    personService.setZones(zone_info)
      .then(function(message) {
        zoneView.renderConfirmation(message)
         RR.clearCookies(['state', 'device_id']);

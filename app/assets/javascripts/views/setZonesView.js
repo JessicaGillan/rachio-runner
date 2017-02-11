@@ -1,6 +1,7 @@
 
 RR.setZonesView = (function(){
-  var _controls, _clickAction;
+  var _controls, _clickAction, _gal_counter;
+  var CONVERSION = 0.000072; // 1 cu in/hr == 0.000072 gal/min
 
   var init = function(clickAction) {
     _clickAction = clickAction;
@@ -23,10 +24,19 @@ RR.setZonesView = (function(){
     // Add DONE button
     _wrapper.appendChild(_doneButton());
 
+    // Add Gallon Counter
+    _gal_counter = document.createElement('H3');
+    _gal_counter.setAttribute("id", "gal-counter");
+    _wrapper.appendChild(_gal_counter);
+
     // Add Zone Cards
     if(zones) {
       var _zWrapper = document.createElement('DIV');
       _zWrapper.classList.add("zone-wrapper");
+
+      _zWrapper.addEventListener("input", function(e) {
+        updateCounter(_getGallons());
+      })
 
       var i = zones.length;
       while(i--) {
@@ -42,6 +52,10 @@ RR.setZonesView = (function(){
 
     $modal.modal('show');
     $modal.find('.modal-title').text(message);
+  }
+
+  var updateCounter = function updateCounter(total) {
+    _gal_counter.textContent = "Approximately " + Math.round(total * 10000) / 10000 + " GAL";
   }
 
   // PRIVATE
@@ -62,13 +76,11 @@ RR.setZonesView = (function(){
     var row = document.createElement('DIV');
     row.classList.add("center-block", "zone");
 
-
     row.appendChild(_zoneCard(zone));
     row.appendChild(_controls.cloneNode(true));
 
     row.setAttribute("data-type", "zone");
     row.setAttribute("data-id", zone.id);
-    row.setAttribute("data-state", "unselected");
 
     return row
   }
@@ -80,11 +92,17 @@ RR.setZonesView = (function(){
     card.setAttribute("data-type", "zone");
     card.setAttribute("data-id", zone.id);
 
+    if(zone.customNozzle) {
+      card.setAttribute("data-inchesphr", zone.customNozzle.inchesPerHour);
+    } else {
+      card.setAttribute("data-inchesphr", 1.4);
+    }
+
     card.textContent = zone.name || "Zone " + zone.zoneNumber;
 
     card.addEventListener("click", function(e){
       _toggleSelect(e.target);
-
+      updateCounter(_getGallons());
     })
 
     if(zone.imageUrl) card.style.backgroundImage = "url(" + zone.imageUrl + ")";
@@ -98,36 +116,38 @@ RR.setZonesView = (function(){
       element.classList.remove("selected");
 
       element.parentNode.getElementsByTagName("INPUT")[0].disabled = true;
-      // element.parentNode.getElementsByTagName("SELECT")[0].disabled = true;
     } else {
       element.setAttribute("data-state", "selected");
       element.classList.add("selected");
 
       element.parentNode.getElementsByTagName("INPUT")[0].disabled = false;
-      // element.parentNode.getElementsByTagName("SELECT")[0].disabled = false;
     }
   }
 
   var _setUpControls = function _setUpControls() {
-    _controls = document.createElement('FORM');
+    _controls = document.createElement('DIV');
     _controls.classList.add('form-inline');
 
-    var formGroup = document.createElement('DIV');
-    formGroup.classList.add('form-group');
+    var duration = document.createElement('DIV');
+    duration.classList.add('form-group');
 
-    var duration = formGroup.cloneNode(true);
-    duration.innerHTML = " run for ";
-    duration.innerHTML += "<input type=\"number\" class=\"form-control\" min=\"5\" max=\"120\" name=\"settings.duration\" value=\"6\" disabled=\"true\">";
+    var input = document.createElement('INPUT');
+    input.setAttribute("type", "number");
+    input.setAttribute("min", "5");
+    input.setAttribute("max", "120");
+    input.setAttribute("name", "settings.duration");
+    input.setAttribute("value", "6");
+    input.setAttribute("disabled", "true");
+    input.classList.add("form-control")
 
-    var delay = formGroup.cloneNode(true);
-    delay.innerHTML = " minutes "  // minutes in
+    var pre = document.createTextNode(" run for ");
+    var post = document.createTextNode(" minutes ");
 
-    // TODO Add delay setting with setTimeout
-    // delay.appendChild(_createDelaySelect(0,12));
-    // delay.innerHTML += " hours"
+    duration.appendChild(pre);
+    duration.appendChild(input);
+    duration.appendChild(post);
 
     _controls.appendChild(duration);
-    _controls.appendChild(delay);
   }
 
   var _createDelaySelect = function _createDelaySelect(min, max){
@@ -163,6 +183,21 @@ RR.setZonesView = (function(){
     }
 
     return zones
+  }
+
+  var _getGallons = function _getGallons() {
+    var selected = document.getElementsByClassName('selected');
+
+    var gallons = 0;
+    var rate, duration;
+    for (var i = 0; i < selected.length; i++) {
+      rate = parseFloat(selected[i].getAttribute('data-inchesphr'));
+      duration = selected[i].parentNode.getElementsByTagName("INPUT")[0].value; // duration in minutes
+
+      gallons += rate * CONVERSION * duration
+    }
+
+    return gallons
   }
 
   return {
