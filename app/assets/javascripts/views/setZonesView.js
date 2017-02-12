@@ -2,10 +2,12 @@
 rachioRun.setZonesView = (function($){
   "use strict";
 
-  var _controls, _gal_counter, _altogether,
-      _doneAction, _cancelAction;
-
   var CONVERSION = 0.000072; // 1 cu in/hr == 0.000072 gal/min
+
+  var _altogether, _doneAction, _cancelAction;
+
+  // Stored HTML elements
+  var _controls, _gal_counter, _zones;
 
   var init = function(doneAction, cancelAction) {
     _doneAction = doneAction;
@@ -30,10 +32,7 @@ rachioRun.setZonesView = (function($){
     _wrapper.appendChild(_checkbox());
 
     // Add Gallon Counter
-    _gal_counter = document.createElement('H3');
-    _gal_counter.setAttribute("id", "gal-counter");
-    _gal_counter.classList.add("light-text");
-    _gal_counter.textContent = "Approximately 0 GAL";
+    _gal_counter = _create_gal_counter();
     _wrapper.appendChild(_gal_counter);
 
     // Add Zone Cards
@@ -42,7 +41,7 @@ rachioRun.setZonesView = (function($){
       _zWrapper.classList.add("zone-wrapper");
 
       _zWrapper.addEventListener("input", function(e) {
-        if (_altogether) _setAllToMatch(e.target);
+        if (_altogether) _setAllInputsToMatch(e.target);
         updateCounter(_getGallons());
       })
 
@@ -53,6 +52,9 @@ rachioRun.setZonesView = (function($){
 
       _wrapper.appendChild(_zWrapper)
     }
+
+    // Save zones
+    _zones = document.getElementsByClassName('zone-card');
 
     // Add DONE button
     _wrapper.appendChild(_doneButton());
@@ -76,7 +78,39 @@ rachioRun.setZonesView = (function($){
 
   // PRIVATE
 
-  var _setAllToMatch = function _setAllToMatch(target) {
+  var _getZoneSettings = function(){
+    var selected = document.getElementsByClassName('selected');
+
+    var zoneInfo = {};
+    var zones = [];
+    for (var i = 0; i < selected.length; i++) {
+      zoneInfo = {};
+      zoneInfo.id = selected[i].getAttribute('data-id');
+      zoneInfo.duration = selected[i].parentNode.getElementsByTagName("INPUT")[0].value * 60; // Set duration in seconds
+      zoneInfo.sortOrder = i + 1;
+
+      zones.push(zoneInfo);
+    }
+
+    return zones
+  }
+
+  var _getGallons = function _getGallons() {
+    var selected = document.getElementsByClassName('selected');
+
+    var gallons = 0;
+    var rate, duration;
+    for (var i = 0; i < selected.length; i++) {
+      rate = parseFloat(selected[i].getAttribute('data-inchesphr'));
+      duration = selected[i].parentNode.getElementsByTagName("INPUT")[0].value; // duration in minutes
+
+      gallons += rate * CONVERSION * duration
+    }
+
+    return gallons
+  }
+
+  var _setAllInputsToMatch = function _setAllInputsToMatch(target) {
     if (target.name === "settings.duration") {
       var inputs = document.getElementsByClassName('duration-input');
 
@@ -85,6 +119,73 @@ rachioRun.setZonesView = (function($){
       }
     }
   }
+
+  var _toggleAltogetherMode = function _toggleAltogetherMode(checked) {
+    if (checked) {
+      _altogether = true;
+      _selectAll();
+      updateCounter(_getGallons());
+    } else {
+      _altogether = false;
+      _unselectAll();
+      updateCounter(_getGallons());
+    }
+  }
+
+  var _selectAll = function _selectAll() {
+    for (var i = 0; i < _zones.length; i++) {
+      _selectElement(_zones[i]);
+      _enableInput(_zones[i]);
+    }
+
+    return _zones
+  }
+
+  var _unselectAll = function _unselectAll() {
+    for (var i = 0; i < _zones.length; i++) {
+      _unselectElement(_zones[i]);
+      _disableInput(_zones[i]);
+    }
+
+    return _zones
+  }
+
+  var _toggleSelect = function(element) {
+    if(element.getAttribute('data-state') === "selected") {
+
+      // User disables "Altogether mode" by unselecting one
+      if (_altogether) {
+        document.getElementById('altogether-checkbox').checked = false;
+        _altogether = false;
+      }
+
+      _unselectElement(element);
+      _disableInput(element);
+    } else {
+      _selectElement(element);
+      _enableInput(element);
+    }
+  }
+
+  var _selectElement = function _selectElement(element) {
+    element.setAttribute("data-state", "selected");
+    element.classList.add("selected");
+  }
+
+  var _unselectElement = function _unselectElement(element) {
+    element.setAttribute("data-state", "unselected");
+    element.classList.remove("selected");
+  }
+
+  var _disableInput = function _disableInput(element) {
+    element.parentNode.getElementsByTagName("INPUT")[0].disabled = true;
+  }
+
+  var _enableInput = function _enableInput(element) {
+    element.parentNode.getElementsByTagName("INPUT")[0].disabled = false;
+  }
+
+  //-------------- HTML ELEMENTS ------------------------------//
 
   var _doneButton = function _doneButton() {
     var done = document.createElement('A');
@@ -108,6 +209,38 @@ rachioRun.setZonesView = (function($){
     })
 
     return cancel
+  }
+
+  var _checkbox = function _checkbox () {
+    var wrapper = document.createElement('DIV');
+    wrapper.classList.add('form-check', 'pull-right')
+
+    wrapper.addEventListener("click", function(e) {
+      if(e.target.checked !== undefined) _toggleAltogetherMode(e.target.checked);
+    })
+
+    var label = document.createElement('LABEL');
+    label.classList.add('form-check-label', 'light-text');
+
+    var checkbox = document.createElement('INPUT');
+    checkbox.setAttribute('id', 'altogether-checkbox');
+    checkbox.setAttribute('type', 'checkbox');
+
+    label.appendChild(checkbox);
+    label.appendChild(document.createTextNode("  Set All Zones"));
+
+    wrapper.appendChild(label)
+
+    return wrapper;
+  }
+
+  var _create_gal_counter = function _create_gal_counter() {
+    var gal_counter = document.createElement('H3');
+    gal_counter.setAttribute("id", "gal-counter");
+    gal_counter.classList.add("light-text");
+    gal_counter.textContent = "Approximately 0 GAL";
+
+    return gal_counter
   }
 
   var _zoneRow = function _zoneRow(zone) {
@@ -172,128 +305,6 @@ rachioRun.setZonesView = (function($){
     duration.appendChild(post);
 
     _controls.appendChild(duration);
-  }
-
-  var _getZoneSettings = function(){
-    var selected = document.getElementsByClassName('selected');
-
-    var zoneInfo = {};
-    var zones = [];
-    for (var i = 0; i < selected.length; i++) {
-      zoneInfo = {};
-      zoneInfo.id = selected[i].getAttribute('data-id');
-      zoneInfo.duration = selected[i].parentNode.getElementsByTagName("INPUT")[0].value * 60; // Set duration in seconds
-      zoneInfo.sortOrder = i + 1;
-
-      zones.push(zoneInfo);
-    }
-
-    return zones
-  }
-
-  var _getGallons = function _getGallons() {
-    var selected = document.getElementsByClassName('selected');
-
-    var gallons = 0;
-    var rate, duration;
-    for (var i = 0; i < selected.length; i++) {
-      rate = parseFloat(selected[i].getAttribute('data-inchesphr'));
-      duration = selected[i].parentNode.getElementsByTagName("INPUT")[0].value; // duration in minutes
-
-      gallons += rate * CONVERSION * duration
-    }
-
-    return gallons
-  }
-
-  var _checkbox = function _checkbox () {
-    var wrapper = document.createElement('DIV');
-    wrapper.classList.add('form-check', 'pull-right')
-
-    wrapper.addEventListener("click", function(e) {
-      if(e.target.checked !== undefined) _toggleSelectAll(e.target.checked);
-    })
-
-    var label = document.createElement('LABEL');
-    label.classList.add('form-check-label', 'light-text');
-
-    var checkbox = document.createElement('INPUT');
-    checkbox.setAttribute('id', 'altogether-checkbox');
-    checkbox.setAttribute('type', 'checkbox');
-
-    label.appendChild(checkbox);
-    label.appendChild(document.createTextNode("  Set All Zones"));
-
-    wrapper.appendChild(label)
-
-    return wrapper;
-  }
-
-  var _toggleSelectAll = function _toggleSelectAll(checked) {
-    if (checked) {
-      _altogether = true;
-      _selectAll();
-      updateCounter(_getGallons());
-    } else {
-      _altogether = false;
-      _unselectAll();
-      updateCounter(_getGallons());
-    }
-  }
-
-  var _selectAll = function _selectAll() {
-    var zones = document.getElementsByClassName('zone-card');
-
-    for (var i = 0; i < zones.length; i++) {
-      _selectElement(zones[i]);
-      _enableInput(zones[i]);
-    }
-
-    return zones
-  }
-
-  var _unselectAll = function _unselectAll() {
-    var zones = document.getElementsByClassName('zone-card');
-
-    for (var i = 0; i < zones.length; i++) {
-      _unselectElement(zones[i]);
-      _disableInput(zones[i]);
-    }
-
-    return zones
-  }
-
-  var _toggleSelect = function(element) {
-    if(element.getAttribute('data-state') === "selected") {
-
-      // User disables "Altogether mode" by unselecting one
-      _altogether = false;
-      document.getElementById('altogether-checkbox').checked = false;
-
-      _unselectElement(element);
-      _disableInput(element);
-    } else {
-      _selectElement(element);
-      _enableInput(element);
-    }
-  }
-
-  var _selectElement = function _selectElement(element) {
-    element.setAttribute("data-state", "selected");
-    element.classList.add("selected");
-  }
-
-  var _unselectElement = function _unselectElement(element) {
-    element.setAttribute("data-state", "unselected");
-    element.classList.remove("selected");
-  }
-
-  var _disableInput = function _disableInput(element) {
-    element.parentNode.getElementsByTagName("INPUT")[0].disabled = true;
-  }
-
-  var _enableInput = function _enableInput(element) {
-    element.parentNode.getElementsByTagName("INPUT")[0].disabled = false;
   }
 
   var _slideUpWeather = function _slideUpWeather() {
