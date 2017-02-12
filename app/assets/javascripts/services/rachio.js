@@ -96,8 +96,10 @@ rachioRun.rachio = (function($){
       return Promise.race([fetchReq,
               _timeout(TIMEOUT)
               .then(function () {
+                console.log("Network operation timed out");
                 throw new Error('Network operation timed out');
               })
+              .catch(function(err) { reject(err); })
              ]);
     }
   }
