@@ -33,6 +33,7 @@ rachioRun.setZonesView = (function($){
     _gal_counter = document.createElement('H3');
     _gal_counter.setAttribute("id", "gal-counter");
     _gal_counter.classList.add("light-text");
+    _gal_counter.textContent = "Approximately 0 GAL"
     _wrapper.appendChild(_gal_counter);
 
     // Add Zone Cards
@@ -51,8 +52,6 @@ rachioRun.setZonesView = (function($){
       }
 
       _wrapper.appendChild(_zWrapper)
-
-      _slideUpWeather();
     }
 
     // Add DONE button
@@ -61,8 +60,7 @@ rachioRun.setZonesView = (function($){
     // Add cancel button
     _wrapper.appendChild(_cancelButton());
 
-    updateCounter(_getGallons());
-    
+    _slideUpWeather();
   }
 
   var renderConfirmation = function renderConfirmation(message) {
