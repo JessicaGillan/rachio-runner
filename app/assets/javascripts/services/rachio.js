@@ -2,7 +2,8 @@ var RR = RR || {};
 
 RR.rachio = (function($){
   var BASE_URL = 'https://api.rach.io/1/public',
-      CONTENT_TYPE = 'application/json';
+      CONTENT_TYPE = 'application/json',
+      TIMEOUT = 5000;
 
   var REQUEST = {
     'fetch': _fetchRequest,
@@ -76,16 +77,30 @@ RR.rachio = (function($){
     if(options.data) {
       return _ajaxRequest(urlEnd, options)
     } else {
-      return fetch(_buildUrl(urlEnd), init)
-              .then(function(response) {
-                if(response.ok) {
-                  return response.json()
-                } else {
-                  console.error("Error! ", response)
-                  return response.json()
-                }
-              })
+      var fetchReq = new Promise(function (resolve, reject) {
+        fetch(_buildUrl(urlEnd), init)
+        .then(function(response) {
+          if(response.ok) {
+            return response.json()
+          } else {
+            console.error("Error! ", response)
+            reject(new Error('Response error'));
+          }
+        })
+        .then(function (responseObj) { resolve(responseObj) })
+        .catch(function(err) { reject(err); });
+      })
+
+      return Promise.race([fetchReq, _timeout(TIMEOUT).then(function () {
+        throw new Error('Network operation timed out');
+      })]);
     }
+  }
+
+  var _timeout = function _timeout(time) {
+    return new Promise(function (resolve) {
+      setTimeout(resolve, time);
+    });
   }
 
   var _ajaxRequest = function _ajaxRequest(urlEnd, options) {
@@ -94,8 +109,10 @@ RR.rachio = (function($){
     var init = {};
     init.url = _buildUrl(urlEnd);
     init.method = options.method || 'GET';
+
     init.headers = _ajaxHeaders;
     init.contentType = CONTENT_TYPE;
+    init.timeout = TIMEOUT;
 
     if(options.data) {
       init.data = JSON.stringify(options.data),
