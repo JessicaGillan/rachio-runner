@@ -23,7 +23,7 @@ rachioRun.setZonesView = (function($){
 
     // Add Header
     var _header = document.createElement('H2');
-    _header.textContent = "Select when you'd like to water and for how long...";
+    _header.textContent = "Is this going to heroku??...";
     _wrapper.appendChild(_header);
 
     // Add 'Set Altogether' Checkbox
