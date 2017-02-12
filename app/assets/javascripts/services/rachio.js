@@ -84,7 +84,7 @@ rachioRun.rachio = (function($){
             return response.json()
           } else {
             console.error("Error! ", response)
-            reject(new Error('Response error'));
+            return response.json();
           }
         })
         .then(function (responseObj) { resolve(responseObj) })
@@ -92,7 +92,7 @@ rachioRun.rachio = (function($){
       })
 
       return Promise.race([fetchReq, _timeout(TIMEOUT).then(function () {
-        throw new Error('Network operation timed out');
+        console.error('Network operation timed out');
       })]);
     }
   }
