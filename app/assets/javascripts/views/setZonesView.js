@@ -33,7 +33,7 @@ rachioRun.setZonesView = (function($){
     _gal_counter = document.createElement('H3');
     _gal_counter.setAttribute("id", "gal-counter");
     _gal_counter.classList.add("light-text");
-    _gal_counter.textContent = "Approximately 0 GAL"
+    _gal_counter.textContent = "Approximately 0 GAL";
     _wrapper.appendChild(_gal_counter);
 
     // Add Zone Cards
