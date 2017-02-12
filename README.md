@@ -4,7 +4,7 @@ Set and run the zones on your Rachio smart irrigation system.
 
 [https://rachio-runner.herokuapp.com](https://rachio-runner.herokuapp.com/)
 
-## Rachio Runner
+## Using Rachio Runner
 1. Log In with the pre-populated data
 2. Choose the device you'd like to set
 3. Select zones and set a duration for them (5 - 120 min)
