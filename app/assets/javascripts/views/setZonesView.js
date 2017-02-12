@@ -233,9 +233,11 @@ rachioRun.setZonesView = (function($){
     if (checked) {
       _altogether = true;
       _selectAll();
+      updateCounter(_getGallons());
     } else {
       _altogether = false;
       _unselectAll();
+      updateCounter(_getGallons());
     }
   }
 
