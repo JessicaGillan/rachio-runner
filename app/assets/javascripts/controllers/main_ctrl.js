@@ -1,6 +1,6 @@
-var RR = RR || {};
+var rachioRun = rachioRun || {};
 
-RR.mainCtrl = (function(personService, deviceView, zoneView){
+rachioRun.mainCtrl = (function(personService, deviceView, zoneView){
   var STATES = {
     'zoneSelect': function() { zoneView.render(personService.getZones()) }
   }
@@ -19,10 +19,10 @@ RR.mainCtrl = (function(personService, deviceView, zoneView){
     e.preventDefault();
 
     // set device id
-    RR.setCookie('device_id', e.target.getAttribute('data-id'), 1);
+    rachioRun.setCookie('device_id', e.target.getAttribute('data-id'), 1);
 
     // set modeSelect state in cookie
-    RR.setCookie('state', 'zoneSelect', 1);
+    rachioRun.setCookie('state', 'zoneSelect', 1);
 
     // init and render mode view
     STATES['zoneSelect']();
@@ -35,7 +35,7 @@ RR.mainCtrl = (function(personService, deviceView, zoneView){
     personService.setZones(zone_info)
      .then(function(message) {
        zoneView.renderConfirmation(message)
-        RR.clearCookies(['state', 'device_id']);
+        rachioRun.clearCookies(['state', 'device_id']);
         _renderState();
 
      })
@@ -45,7 +45,7 @@ RR.mainCtrl = (function(personService, deviceView, zoneView){
   var cancel = function cancel(e, zone_info){
     e.preventDefault();
 
-    RR.clearCookies(['state', 'device_id']);
+    rachioRun.clearCookies(['state', 'device_id']);
     _renderState();
   }
 
@@ -53,7 +53,7 @@ RR.mainCtrl = (function(personService, deviceView, zoneView){
 
   var _renderState = function _renderState() {
     // Store state in cookies cookies in case of refresh
-    var state = RR.getCookie('state');
+    var state = rachioRun.getCookie('state');
 
     if(state && STATES[state]) {
       STATES[state]();
@@ -65,4 +65,4 @@ RR.mainCtrl = (function(personService, deviceView, zoneView){
   return {
     init: init
   }
-})(RR.personService, RR.chooseDeviceView, RR.setZonesView);
+})(rachioRun.personService, rachioRun.chooseDeviceView, rachioRun.setZonesView);

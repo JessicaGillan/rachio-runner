@@ -1,5 +1,5 @@
 
-RR.setZonesView = (function(){
+rachioRun.setZonesView = (function($){
   var _controls, _gal_counter,
       _doneAction, _cancelAction;
 
@@ -11,7 +11,7 @@ RR.setZonesView = (function(){
   }
 
   var render = function render(zones) {
-    RR.fadeFlashes();
+    rachioRun.fadeFlashes();
 
     var _wrapper = document.getElementById('js-app');
 
@@ -45,6 +45,8 @@ RR.setZonesView = (function(){
       }
 
       _wrapper.appendChild(_zWrapper)
+
+      _slideUpWeather();
     }
 
     // Add DONE button
@@ -219,9 +221,13 @@ RR.setZonesView = (function(){
     return gallons
   }
 
+  _slideUpWeather = function _slideUpWeather() {
+    $('#weather-wrapper').slideUp(1000);
+  }
+
   return {
     init: init,
     render: render,
     renderConfirmation: renderConfirmation
   }
-})();
+})($);

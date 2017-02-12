@@ -1,6 +1,6 @@
-var RR = RR || {};
+var rachioRun = rachioRun || {};
 
-RR.rachio = (function($){
+rachioRun.rachio = (function($){
   var BASE_URL = 'https://api.rach.io/1/public',
       CONTENT_TYPE = 'application/json',
       TIMEOUT = 5000;

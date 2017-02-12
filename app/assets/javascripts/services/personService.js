@@ -1,6 +1,6 @@
-var RR = RR || {};
+var rachioRun = rachioRun || {};
 
-RR.personService = (function(rachio){
+rachioRun.personService = (function(rachio){
   var _person = {};
 
   var init = function init(auth_token) {
@@ -17,7 +17,7 @@ RR.personService = (function(rachio){
   }
 
   var getCurrentDeviceZones = function getCurrentDeviceZones() {
-    var id = RR.getCookie('device_id');
+    var id = rachioRun.getCookie('device_id');
 
     if(id) return _zonesForDevice(id);
 
@@ -78,4 +78,4 @@ RR.personService = (function(rachio){
     getZones: getCurrentDeviceZones,
     setZones: setZones
   }
-})(RR.rachio);
+})(rachioRun.rachio);

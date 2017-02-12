@@ -1,6 +1,6 @@
-var RR = RR || {};
+var rachioRun = rachioRun || {};
 
-RR.modeView = (function(){
+rachioRun.modeView = (function(){
   var _clickAction;
 
   var init = function init(clickAction) {

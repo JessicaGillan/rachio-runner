@@ -17,8 +17,6 @@
         <% if current_user %>
           <li><a href="/users/sign_out" data-method="delete">Log out</a></li>
           <li class="navbar-text">Welcome, <%= current_user.first_name %></li>
-        <% else %>
-          <li><a href="/users/sign_in">Log in</a></li>
         <% end %>
       </ul>
     </div><!-- /.navbar-collapse -->

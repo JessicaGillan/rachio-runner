@@ -1,20 +1,20 @@
-var RR = RR || {};
+var rachioRun = rachioRun || {};
 
 $(document).ready(function() {
-  if( $("#js_app-index").length ){
-    RR.mainCtrl.init('<%= Rails.application.secrets.rachio_auth_token %>');
+  if( $("#static_pages-index").length ){
+    rachioRun.mainCtrl.init('<%= Rails.application.secrets.rachio_auth_token %>');
   }
 });
 
 // get/set cookie methods from W3 schools, http://www.w3schools.com/js/js_cookies.asp
-RR.setCookie = function _setCookie(cname, cvalue, exdays) {
+rachioRun.setCookie = function _setCookie(cname, cvalue, exdays) {
   var d = new Date();
   d.setTime(d.getTime() + (exdays*24*60*60*1000));
   var expires = "expires="+ d.toUTCString();
   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
-RR.getCookie = function _getCookie(cname) {
+rachioRun.getCookie = function _getCookie(cname) {
   var name = cname + "=";
   var decodedCookie = decodeURIComponent(document.cookie);
   var ca = decodedCookie.split(';');
@@ -30,12 +30,12 @@ RR.getCookie = function _getCookie(cname) {
   return "";
 }
 
-RR.clearCookies = function clearCookies(cookies) {
+rachioRun.clearCookies = function clearCookies(cookies) {
   for (var i = 0; i < cookies.length; i++) {
-    RR.setCookie(cookies[i], '', 0);
+    rachioRun.setCookie(cookies[i], '', 0);
   }
 }
 
-RR.fadeFlashes = function fadeFlashes() {
+rachioRun.fadeFlashes = function fadeFlashes() {
   $('.devise-alert').fadeOut(2000);
 }

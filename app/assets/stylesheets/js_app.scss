@@ -85,6 +85,7 @@ a {
 .navbar, .navbar-default{
   border-radius: 0;
   background-color: #fff;
+  margin-bottom: 0;
 
   .navbar-text {
     color: $navy-blue;
@@ -101,10 +102,17 @@ a {
 }
 
 // Devise flashes
+// Flash (avoid height adjust)
+.flash {
+  height: 30px;
+  margin: 0;
+}
+
 .devise-alert {
   border-radius: 4px;
   line-height: 200%;
   padding-left: 15px;
+  margin: 0;
 
   // Bootstrap yellow alert color scheme
   background-color: #fcf8e3;
@@ -145,4 +153,21 @@ a {
   line-height: 1.5;
   margin: 2px;
   padding: 4px;
+}
+
+// Ventusky Weather iFrame
+#weather-wrapper
+{
+    width    : 90vw;
+    height   : 60vh;
+    overflow : hidden;
+    position : relative;
+    margin-bottom: 20px;
+}
+
+#ventusky
+{
+    position : absolute;
+    width    : 100%;
+    height   : 100%;
 }

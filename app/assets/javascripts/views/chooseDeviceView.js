@@ -1,6 +1,6 @@
-var RR = RR || {};
+var rachioRun = rachioRun || {};
 
-RR.chooseDeviceView = (function(){
+rachioRun.chooseDeviceView = (function($){
   var _clickAction;
 
   var init = function init(clickAction) {
@@ -8,16 +8,11 @@ RR.chooseDeviceView = (function(){
   }
 
   var render = function render(devices) {
-    RR.fadeFlashes();
+    rachioRun.fadeFlashes();
 
     var _wrapper = document.getElementById('js-app');
 
     _wrapper.innerHTML = ""; // Reset View
-
-    // Add Header
-    var _header = document.createElement('H2')
-    _header.textContent = "Which device would you like to run?";
-    _wrapper.appendChild(_header);
 
     // Add Device Cards
     if(devices) {
@@ -27,6 +22,8 @@ RR.chooseDeviceView = (function(){
         _wrapper.appendChild(_enabledZones(devices[i].zones));
       }
     }
+
+    _showWeather();
   }
 
   // PRIVATE
@@ -80,8 +77,12 @@ RR.chooseDeviceView = (function(){
     return zoneWrapper
   }
 
+  _showWeather = function _showWeather() {
+    $('#weather-wrapper').show();
+  }
+
   return {
     init: init,
     render: render
   }
-})();
+})($);
