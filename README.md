@@ -14,13 +14,11 @@ Set and run the zones on your Rachio smart irrigation system.
 The goal of this project was to achieve core functionality and a great user experience
 using as much vanilla JS as possible. (ie no front-end frameworks, some jQuery)
 
-Tools utilized:
+### Tools utilized
 1. Rails - Authentication with Devise
 2. Bootstrap - Styling
 
-
-Other Credits:
-[Ventusky](https://www.ventusky.com/) 
-A beautiful weather map developed by InMeteo, in collaboration with Marek Mojzík and Martin Prantl.
+### Other Credits
+[Ventusky](https://www.ventusky.com/) - A beautiful weather map developed by InMeteo, in collaboration with Marek Mojzík and Martin Prantl.
 
 
