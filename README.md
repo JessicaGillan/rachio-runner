@@ -12,7 +12,7 @@ Set and run the zones on your Rachio smart irrigation system.
 
 ## Technical Overview
 The goal of this project was to achieve core functionality and a great user experience
-using as much vanilla JS as possible. (ie no front-end frameworks, some jQuery)
+using as much vanilla JS as possible. (No front-end frameworks used)
 
 ### Tools utilized
 1. Rails - Authentication with Devise
