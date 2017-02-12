@@ -34,7 +34,6 @@ rachioRun.setZonesView = (function($){
     _gal_counter.setAttribute("id", "gal-counter");
     _gal_counter.classList.add("light-text");
     _wrapper.appendChild(_gal_counter);
-    updateCounter(_getGallons());
 
     // Add Zone Cards
     if(zones) {
@@ -61,6 +60,9 @@ rachioRun.setZonesView = (function($){
 
     // Add cancel button
     _wrapper.appendChild(_cancelButton());
+
+    updateCounter(_getGallons());
+    
   }
 
   var renderConfirmation = function renderConfirmation(message) {
