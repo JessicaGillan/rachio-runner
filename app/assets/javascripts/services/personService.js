@@ -1,6 +1,8 @@
 var rachioRun = rachioRun || {};
 
 rachioRun.personService = (function(rachio){
+  "use strict";
+
   var _person = {};
 
   var init = function init(auth_token) {

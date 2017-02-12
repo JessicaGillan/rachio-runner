@@ -1,6 +1,8 @@
 var rachioRun = rachioRun || {};
 
 rachioRun.rachio = (function($){
+  "use strict";
+
   var BASE_URL = 'https://api.rach.io/1/public',
       CONTENT_TYPE = 'application/json',
       TIMEOUT = 5000;
@@ -84,16 +86,19 @@ rachioRun.rachio = (function($){
             return response.json()
           } else {
             console.error("Error! ", response)
-            return response.json();
+            reject(new Error('Response error'));
           }
         })
         .then(function (responseObj) { resolve(responseObj) })
         .catch(function(err) { reject(err); });
       })
 
-      return Promise.race([fetchReq, _timeout(TIMEOUT).then(function () {
-        console.error('Network operation timed out');
-      })]);
+      return Promise.race([fetchReq,
+              _timeout(TIMEOUT)
+              .then(function () {
+                throw new Error('Network operation timed out');
+              })
+             ]);
     }
   }
 

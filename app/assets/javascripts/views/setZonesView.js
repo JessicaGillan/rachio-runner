@@ -1,5 +1,7 @@
 
 rachioRun.setZonesView = (function($){
+  "use strict";
+
   var _controls, _gal_counter,
       _doneAction, _cancelAction;
 
@@ -221,7 +223,7 @@ rachioRun.setZonesView = (function($){
     return gallons
   }
 
-  _slideUpWeather = function _slideUpWeather() {
+  var _slideUpWeather = function _slideUpWeather() {
     $('#weather-wrapper').slideUp(1000);
   }
 

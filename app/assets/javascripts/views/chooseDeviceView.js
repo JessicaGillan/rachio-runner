@@ -1,6 +1,8 @@
 var rachioRun = rachioRun || {};
 
 rachioRun.chooseDeviceView = (function($){
+  "use strict";
+
   var _clickAction;
 
   var init = function init(clickAction) {
@@ -77,7 +79,7 @@ rachioRun.chooseDeviceView = (function($){
     return zoneWrapper
   }
 
-  _showWeather = function _showWeather() {
+  var _showWeather = function _showWeather() {
     $('#weather-wrapper').show();
   }
 

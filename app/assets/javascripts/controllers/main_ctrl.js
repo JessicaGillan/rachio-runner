@@ -1,6 +1,8 @@
 var rachioRun = rachioRun || {};
 
 rachioRun.mainCtrl = (function(personService, deviceView, zoneView){
+  "use strict";
+  
   var STATES = {
     'zoneSelect': function() { zoneView.render(personService.getZones()) }
   }

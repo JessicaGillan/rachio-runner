@@ -1,6 +1,8 @@
 var rachioRun = rachioRun || {};
 
 rachioRun.modeView = (function(){
+  "use strict";
+  
   var _clickAction;
 
   var init = function init(clickAction) {
