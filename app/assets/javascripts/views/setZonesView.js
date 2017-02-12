@@ -2,7 +2,7 @@
 rachioRun.setZonesView = (function($){
   "use strict";
 
-  var _controls, _gal_counter,
+  var _controls, _gal_counter, _altogether,
       _doneAction, _cancelAction;
 
   var CONVERSION = 0.000072; // 1 cu in/hr == 0.000072 gal/min
@@ -26,11 +26,15 @@ rachioRun.setZonesView = (function($){
     _header.textContent = "Select when you'd like to water and for how long...";
     _wrapper.appendChild(_header);
 
+    // Add 'Set Altogether' Checkbox
+    _wrapper.appendChild(_checkbox());
+
     // Add Gallon Counter
     _gal_counter = document.createElement('H3');
     _gal_counter.setAttribute("id", "gal-counter");
     _gal_counter.classList.add("light-text");
     _wrapper.appendChild(_gal_counter);
+    updateCounter(_getGallons());
 
     // Add Zone Cards
     if(zones) {
@@ -38,6 +42,7 @@ rachioRun.setZonesView = (function($){
       _zWrapper.classList.add("zone-wrapper");
 
       _zWrapper.addEventListener("input", function(e) {
+        if (_altogether) _setAllToMatch(e.target);
         updateCounter(_getGallons());
       })
 
@@ -70,6 +75,16 @@ rachioRun.setZonesView = (function($){
   }
 
   // PRIVATE
+
+  var _setAllToMatch = function _setAllToMatch(target) {
+    if (target.name === "settings.duration") {
+      var inputs = document.getElementsByClassName('duration-input');
+
+      for (var i = 0; i < inputs.length; i++) {
+        inputs[i].value = target.value
+      }
+    }
+  }
 
   var _doneButton = function _doneButton() {
     var done = document.createElement('A');
@@ -111,7 +126,7 @@ rachioRun.setZonesView = (function($){
   var _zoneCard = function _zoneCard(zone) {
     var card = document.createElement('A');
 
-    card.classList.add("btn", "btn-card");
+    card.classList.add("btn", "btn-card", "zone-card");
     card.setAttribute("data-type", "zone");
     card.setAttribute("data-id", zone.id);
 
@@ -133,20 +148,6 @@ rachioRun.setZonesView = (function($){
     return card
   }
 
-  var _toggleSelect = function(element) {
-    if(element.getAttribute('data-state') === "selected") {
-      element.setAttribute("data-state", "unselected");
-      element.classList.remove("selected");
-
-      element.parentNode.getElementsByTagName("INPUT")[0].disabled = true;
-    } else {
-      element.setAttribute("data-state", "selected");
-      element.classList.add("selected");
-
-      element.parentNode.getElementsByTagName("INPUT")[0].disabled = false;
-    }
-  }
-
   var _setUpControls = function _setUpControls() {
     _controls = document.createElement('DIV');
     _controls.classList.add('form-inline');
@@ -161,7 +162,7 @@ rachioRun.setZonesView = (function($){
     input.setAttribute("name", "settings.duration");
     input.setAttribute("value", "6");
     input.setAttribute("disabled", "true");
-    input.classList.add("form-control")
+    input.classList.add("form-control", "duration-input")
 
     var pre = document.createTextNode(" run for ");
     var post = document.createTextNode(" minutes ");
@@ -171,24 +172,6 @@ rachioRun.setZonesView = (function($){
     duration.appendChild(post);
 
     _controls.appendChild(duration);
-  }
-
-  var _createDelaySelect = function _createDelaySelect(min, max){
-    var hours = document.createElement('SELECT');
-    hours.disabled = true;
-
-    var option = document.createElement("option");
-
-    var o;
-    for (var i = min; i <= max; i++) {
-      o = option.cloneNode();
-      o.text = String(i);
-      o.value = String(i);
-
-      hours.appendChild(o);
-    }
-
-    return hours
   }
 
   var _getZoneSettings = function(){
@@ -221,6 +204,94 @@ rachioRun.setZonesView = (function($){
     }
 
     return gallons
+  }
+
+  var _checkbox = function _checkbox () {
+    var wrapper = document.createElement('DIV');
+    wrapper.classList.add('form-check', 'pull-right')
+
+    wrapper.addEventListener("click", function(e) {
+      if(e.target.checked !== undefined) _toggleSelectAll(e.target.checked);
+    })
+
+    var label = document.createElement('LABEL');
+    label.classList.add('form-check-label', 'light-text');
+
+    var checkbox = document.createElement('INPUT');
+    checkbox.setAttribute('id', 'altogether-checkbox');
+    checkbox.setAttribute('type', 'checkbox');
+
+    label.appendChild(checkbox);
+    label.appendChild(document.createTextNode("  Set All Zones"));
+
+    wrapper.appendChild(label)
+
+    return wrapper;
+  }
+
+  var _toggleSelectAll = function _toggleSelectAll(checked) {
+    if (checked) {
+      _altogether = true;
+      _selectAll();
+    } else {
+      _altogether = false;
+      _unselectAll();
+    }
+  }
+
+  var _selectAll = function _selectAll() {
+    var zones = document.getElementsByClassName('zone-card');
+
+    for (var i = 0; i < zones.length; i++) {
+      _selectElement(zones[i]);
+      _enableInput(zones[i]);
+    }
+
+    return zones
+  }
+
+  var _unselectAll = function _unselectAll() {
+    var zones = document.getElementsByClassName('zone-card');
+
+    for (var i = 0; i < zones.length; i++) {
+      _unselectElement(zones[i]);
+      _disableInput(zones[i]);
+    }
+
+    return zones
+  }
+
+  var _toggleSelect = function(element) {
+    if(element.getAttribute('data-state') === "selected") {
+
+      // User disables "Altogether mode" by unselecting one
+      _altogether = false;
+      document.getElementById('altogether-checkbox').checked = false;
+
+      _unselectElement(element);
+      _disableInput(element);
+    } else {
+      _selectElement(element);
+      _enableInput(element);
+    }
+  }
+
+  var _selectElement = function _selectElement(element) {
+    element.setAttribute("data-state", "selected");
+    element.classList.add("selected");
+  }
+
+  var _unselectElement = function _unselectElement(element) {
+    element.setAttribute("data-state", "unselected");
+    element.classList.remove("selected");
+  }
+
+  var _disableInput = function _disableInput(element) {
+    element.parentNode.getElementsByTagName("INPUT")[0].disabled = true;
+  }
+
+  var _enableInput = function _enableInput(element) {
+    element.parentNode.getElementsByTagName("INPUT")[0].disabled = false;
   }
 
   var _slideUpWeather = function _slideUpWeather() {
