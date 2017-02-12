@@ -1,24 +1,26 @@
-# README
+# Rachio Runner
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Set and run the zones on your Rachio smart irrigation system.
 
-Things you may want to cover:
+[https://rachio-runner.herokuapp.com](https://rachio-runner.herokuapp.com/)
 
-* Ruby version
+## Rachio Runner
+1. Log In with the pre-populated data
+2. Choose the device you'd like to set
+3. Select zones and set a duration for them (5 - 120 min)
+4. Submit!
 
-* System dependencies
+## Technical Overview
+The goal of this project was to achieve core functionality and a great user experience
+using as much vanilla JS as possible. (ie no front-end frameworks, some jQuery)
 
-* Configuration
+Tools utilized:
+1. Rails - Authentication with Devise
+2. Bootstrap - Styling
 
-* Database creation
 
-* Database initialization
+Other Credits:
+[Ventusky](https://www.ventusky.com/) 
+A beautiful weather map developed by InMeteo, in collaboration with Marek Mojzík and Martin Prantl.
 
-* How to run the test suite
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
